@@ -33,5 +33,19 @@ public class NotificationDbOutputAdapter implements NewNotificationOutputPort, F
         }
         return notificationsEntity.get(0).toDomainModel();
     }
+    
+    public Notification updateNotification(Notification notification) {
+        Optional<NotificationDbEntity> existingNotification = notificationDbEntityRepository.findById(notification.getId().toString());
+
+        if (existingNotification.isPresent()) {
+            NotificationDbEntity notificationDbEntity = existingNotification.get();
+            notificationDbEntity.setType(notification.getType());
+            NotificationDbEntity updatedNotification = notificationDbEntityRepository.save(notificationDbEntity);
+
+            return updatedNotification.toDomainModel();
+        }
+
+        return null;
+    }
 
 }

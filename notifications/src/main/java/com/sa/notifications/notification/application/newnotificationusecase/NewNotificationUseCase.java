@@ -42,9 +42,4 @@ public class NewNotificationUseCase implements NewNotificationInputPort{
         }
     }
 
-    
-    
-    
-
-
 }
