@@ -25,9 +25,9 @@ public class SendNotificationControllerAdapter {
         this.sendToAllNotificationInputPort = sendToAllNotificationInputPort;
     }
     
-    @PostMapping("/hiring/{email}")
+    @PostMapping("/hiring")
     public void sendHiringNotification (
-            @PathVariable String email){
+            @RequestParam String email){
         this.sendHiringNotificationInputPort.sendHiringNotification(email);
     }
 

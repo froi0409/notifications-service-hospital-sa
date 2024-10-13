@@ -3,16 +3,16 @@ package com.sa.notifications.logemployeenotification.infrastructure.outputadapte
 import com.sa.notifications.logemployeenotification.domain.EmployeeNotificationLog;
 import com.sa.notifications.lognotification.infrastructure.outputadapters.db.NotificationLogDbEntity;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.UUID;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Setter
-@Builder
 @Entity
+@NoArgsConstructor
 @Table(name = "employee_notification_log", schema = "notifications")
 public class EmployeeNotificationLogDbEntity {
 
@@ -21,7 +21,7 @@ public class EmployeeNotificationLogDbEntity {
     private String id;
 
     @ManyToOne
-    @JoinColumn(name = "id_notification", nullable = false)
+    @JoinColumn(name = "id_notification_log", nullable = false)
     private NotificationLogDbEntity notification;
 
     @Column(name = "email_employee", nullable = false)
@@ -38,10 +38,10 @@ public class EmployeeNotificationLogDbEntity {
 
     // Conversión desde el modelo de dominio
     public static EmployeeNotificationLogDbEntity from(EmployeeNotificationLog employeeNotification) {
-        return EmployeeNotificationLogDbEntity.builder()
-                .id(employeeNotification.getId() != null ? employeeNotification.getId().toString() : UUID.randomUUID().toString())
-                .notification(NotificationLogDbEntity.from(employeeNotification.getNotification()))
-                .emailEmployee(employeeNotification.getEmailEmployee())
-                .build();
+        EmployeeNotificationLogDbEntity entity = new EmployeeNotificationLogDbEntity();
+        entity.setId(employeeNotification.getId() != null ? employeeNotification.getId().toString() : UUID.randomUUID().toString());
+        entity.setNotification(NotificationLogDbEntity.from(employeeNotification.getNotification()));
+        entity.setEmailEmployee(employeeNotification.getEmailEmployee());
+       return entity;
     }
 }

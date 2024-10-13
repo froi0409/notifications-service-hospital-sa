@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -24,17 +25,17 @@ public class SuscribeNotificationControllerAdapter {
         this.unsuscribeEmployeeInputPort = unsuscribeEmployeeInputPort;
     }
     
-    @PostMapping("/suscribe/{type}/{email}")
+    @PostMapping("/suscribe/{type}")
     public void suscribeEmployee (
             @PathVariable String type,
-            @PathVariable String email){
+            @RequestParam String email){
         this.suscribeEmployeeInputPort.suscribeEmployee(type, email);
     }
     
-    @PostMapping("/unsuscribe/{type}/{email}")
+    @PostMapping("/unsuscribe/{type}")
     public void unsuscribeEmployee (
             @PathVariable String type,
-            @PathVariable String email){
+            @RequestParam String email){
         this.unsuscribeEmployeeInputPort.unsuscribeEmployee(type, email);
     }
 

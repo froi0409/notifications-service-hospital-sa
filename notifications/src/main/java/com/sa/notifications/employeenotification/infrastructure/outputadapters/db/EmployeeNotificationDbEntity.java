@@ -8,11 +8,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.UUID;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Setter
-@Builder
 @Entity
+@NoArgsConstructor
 @Table(name = "employee_notification", schema = "notifications")
 public class EmployeeNotificationDbEntity {
 
@@ -38,10 +39,10 @@ public class EmployeeNotificationDbEntity {
 
     // Conversión desde el modelo de dominio
     public static EmployeeNotificationDbEntity from(EmployeeNotification employeeNotification) {
-        return EmployeeNotificationDbEntity.builder()
-                .id(employeeNotification.getId() != null ? employeeNotification.getId().toString() : UUID.randomUUID().toString())
-                .notification(NotificationDbEntity.from(employeeNotification.getNotification()))
-                .emailEmployee(employeeNotification.getEmailEmployee())
-                .build();
+        EmployeeNotificationDbEntity entity = new EmployeeNotificationDbEntity();
+        entity.setId(employeeNotification.getId() != null ? employeeNotification.getId().toString() : UUID.randomUUID().toString());
+        entity.setNotification(NotificationDbEntity.from(employeeNotification.getNotification()));
+        entity.setEmailEmployee(employeeNotification.getEmailEmployee());
+        return entity;
     }
 }

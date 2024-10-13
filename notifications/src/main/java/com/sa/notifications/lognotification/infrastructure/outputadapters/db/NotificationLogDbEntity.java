@@ -4,17 +4,17 @@ import com.sa.notifications.lognotification.domain.NotificationLog;
 import com.sa.notifications.notification.infrastructure.outputadapters.db.NotificationDbEntity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.UUID;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Setter
-@Builder
 @Entity
 @Table(name = "notification_log", schema = "notifications")
+@NoArgsConstructor
 public class NotificationLogDbEntity {
 
     @Id
@@ -43,11 +43,11 @@ public class NotificationLogDbEntity {
 
     // Conversión desde el modelo de dominio
     public static NotificationLogDbEntity from(NotificationLog notificationLog) {
-        return NotificationLogDbEntity.builder()
-                .id(notificationLog.getId() != null ? notificationLog.getId().toString() : UUID.randomUUID().toString())
-                .notification(NotificationDbEntity.from(notificationLog.getNotification()))
-                .description(notificationLog.getDescription())
-                .date(notificationLog.getDate() != null ? notificationLog.getDate() : LocalDateTime.now())
-                .build();
+        NotificationLogDbEntity entity = new NotificationLogDbEntity();
+        entity.setId(notificationLog.getId() != null ? notificationLog.getId().toString() : UUID.randomUUID().toString());
+        entity.setNotification(NotificationDbEntity.from(notificationLog.getNotification()));
+        entity.setDescription(notificationLog.getDescription());
+        entity.setDate(notificationLog.getDate() != null ? notificationLog.getDate() : LocalDateTime.now());
+        return entity;
     }
 }
