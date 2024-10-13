@@ -26,3 +26,5 @@ replay_pid*
 nb-configuration.xml
 nbactions-williamdev.xml
 /notifications/src/main/resources/application-william.properties
+/notifications/nbactions-devwilliam.xml
+
