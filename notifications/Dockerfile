@@ -14,20 +14,6 @@ RUN mvn -f /app/pom.xml clean package
 #
 FROM amazoncorretto:17
 
-# Definir argumentos de construcción para las credenciales
-ARG DB_URL
-ARG DB_USERNAME
-ARG DB_PASSWORD
-ARG MAIL_USERNAME
-ARG MAIL_PASSWORD
-
-# Convertir los argumentos en variables de entorno en el contenedor final
-ENV DB_URL=${DB_URL}
-ENV DB_USERNAME=${DB_USERNAME}
-ENV DB_PASSWORD=${DB_PASSWORD}
-ENV MAIL_USERNAME=${MAIL_USERNAME}
-ENV MAIL_PASSWORD=${MAIL_PASSWORD}
-
 COPY --from=0 /app/target/notifications-0.0.1-SNAPSHOT.jar /usr/local/lib/notifications-0.0.1-SNAPSHOT.jar
 EXPOSE 8093
 ENTRYPOINT ["java", "-jar", "/usr/local/lib/notifications-0.0.1-SNAPSHOT.jar"]
