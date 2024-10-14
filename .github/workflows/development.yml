@@ -76,12 +76,7 @@ jobs:
         env: 
           NAME: hospital_notifications_backend
         run: |
-          docker build --build-arg DB_URL=${{ secrets.DB_URL }} \
-                      --build-arg DB_USERNAME=${{ secrets.DB_USERNAME }} \
-                      --build-arg DB_PASSWORD='${{ secrets.DB_PASSWORD }}' \
-                      --build-arg MAIL_USERNAME=${{ secrets.MAIL_USERNAME }} \
-                        --build-arg MAIL_PASSWORD='${{ secrets.MAIL_PASSWORD }}' \
-                      -f notifications/Dockerfile -t ${{ env.NAME }}:latest ./notifications
+          docker build -f notifications/Dockerfile -t ${{ env.NAME }}:latest ./notifications
           docker tag ${{ env.NAME }}:latest ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.NAME }}:latest
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.NAME }}:latest
 
