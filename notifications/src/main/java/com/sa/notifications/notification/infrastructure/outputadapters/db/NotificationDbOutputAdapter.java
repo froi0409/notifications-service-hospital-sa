@@ -3,14 +3,17 @@ package com.sa.notifications.notification.infrastructure.outputadapters.db;
 import com.sa.notifications.common.OutputAdapter;
 import com.sa.notifications.notification.domain.Notification;
 import com.sa.notifications.notification.infrastructure.outputports.db.FindNotificationByTypeOutputPort;
+import com.sa.notifications.notification.infrastructure.outputports.db.GetAllNotificationsOutputPort;
 import com.sa.notifications.notification.infrastructure.outputports.db.NewNotificationOutputPort;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @OutputAdapter
-public class NotificationDbOutputAdapter implements NewNotificationOutputPort, FindNotificationByTypeOutputPort {
+public class NotificationDbOutputAdapter implements NewNotificationOutputPort, FindNotificationByTypeOutputPort,
+        GetAllNotificationsOutputPort{
     
     private NotificationDbEntityRepository notificationDbEntityRepository;
     
@@ -46,6 +49,13 @@ public class NotificationDbOutputAdapter implements NewNotificationOutputPort, F
         }
 
         return null;
+    }
+    
+    @Override
+    public List<Notification> getAllNotifications() {
+        return notificationDbEntityRepository.findAll().stream()
+            .map(NotificationDbEntity::toDomainModel)
+            .collect(Collectors.toList());
     }
 
 }
