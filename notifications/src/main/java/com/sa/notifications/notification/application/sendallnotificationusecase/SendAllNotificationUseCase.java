@@ -45,6 +45,10 @@ public class SendAllNotificationUseCase implements SendToAllNotificationInputPor
         // Get Notification hiring
         Notification notification = this.notificationDbOutputAdapter.findNotificationByType(typeNotification);
         
+        if(notification == null){
+            throw new IllegalArgumentException("Tiene que haber un tipo de notificacion para mandar la notificacion");
+        }
+        
         List<EmployeeNotification> employees = this.employeeNotificationDbOutputAdapter.findEmployeeNotificationByNotificationId(notification);
         
         

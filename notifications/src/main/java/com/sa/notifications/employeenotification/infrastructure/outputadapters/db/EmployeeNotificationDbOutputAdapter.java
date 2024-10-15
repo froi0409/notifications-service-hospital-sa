@@ -58,5 +58,5 @@ public class EmployeeNotificationDbOutputAdapter implements FindEmployeeNotifica
                 .map(EmployeeNotificationDbEntity::toDomainModel)
                 .collect(Collectors.toList());
     }
-
+    
 }
