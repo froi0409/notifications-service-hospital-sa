@@ -24,7 +24,7 @@ hs_err_pid*
 replay_pid*
 
 nb-configuration.xml
-nbactions-williamdev.xml
+nbactions-william.xml
 /notifications/src/main/resources/application-william.properties
 /notifications/nbactions-devwilliam.xml
 
