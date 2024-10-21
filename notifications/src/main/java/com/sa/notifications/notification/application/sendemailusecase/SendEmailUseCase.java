@@ -1,7 +1,9 @@
 package com.sa.notifications.notification.application.sendemailusecase;
 
 import com.sa.notifications.common.UseCase;
+import lombok.Value;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
@@ -9,10 +11,12 @@ import org.springframework.mail.javamail.JavaMailSender;
 public class SendEmailUseCase {
     
     private final JavaMailSender mailSender;
+    private final String mailUsername;
     
     @Autowired
-    public SendEmailUseCase(JavaMailSender mailSender) {
+    public SendEmailUseCase(JavaMailSender mailSender, Environment env) {
         this.mailSender = mailSender;
+        this.mailUsername = env.getProperty("spring.mail.username");
     }
     
     public void sendEmail(String to, String subject, String body) {
@@ -20,8 +24,7 @@ public class SendEmailUseCase {
         message.setTo(to);
         message.setSubject(subject);
         message.setText(body);
-        message.setFrom("williamumana201931448@cunoc.edu.gt");  // Asegúrate de que el correo sea el mismo que el configurado en properties
-
+        message.setFrom(mailUsername);
         mailSender.send(message);
     }
     
