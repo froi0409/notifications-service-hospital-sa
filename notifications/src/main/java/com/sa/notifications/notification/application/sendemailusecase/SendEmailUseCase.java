@@ -1,9 +1,7 @@
 package com.sa.notifications.notification.application.sendemailusecase;
 
 import com.sa.notifications.common.UseCase;
-import lombok.Value;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
