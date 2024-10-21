@@ -11,12 +11,10 @@ import org.springframework.mail.javamail.JavaMailSender;
 public class SendEmailUseCase {
     
     private final JavaMailSender mailSender;
-    private final String mailUsername;
     
     @Autowired
-    public SendEmailUseCase(JavaMailSender mailSender, Environment env) {
+    public SendEmailUseCase(JavaMailSender mailSender) {
         this.mailSender = mailSender;
-        this.mailUsername = env.getProperty("spring.mail.username");
     }
     
     public void sendEmail(String to, String subject, String body) {
@@ -24,7 +22,7 @@ public class SendEmailUseCase {
         message.setTo(to);
         message.setSubject(subject);
         message.setText(body);
-        message.setFrom(mailUsername);
+        message.setFrom("hoscunocsacunocsa@gmail.com");
         mailSender.send(message);
     }
     
