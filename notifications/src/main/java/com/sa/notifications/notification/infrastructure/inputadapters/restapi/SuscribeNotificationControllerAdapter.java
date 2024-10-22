@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/v1/notifications")
+@RequestMapping("/api/v1/notifications")
 @WebAdapter
 public class SuscribeNotificationControllerAdapter {
 
