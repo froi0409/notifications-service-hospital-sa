@@ -1,4 +1,4 @@
-package com.sa.notifications.notification.application.suscribeemployeeusecase;
+package com.sa.notifications.notification.application.unsuscribeemployeeusecase;
 
 import jakarta.transaction.Transactional;
 

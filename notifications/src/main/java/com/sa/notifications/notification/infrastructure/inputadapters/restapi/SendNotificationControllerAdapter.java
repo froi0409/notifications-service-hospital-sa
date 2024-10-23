@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/v1/notifications")
+@RequestMapping("/api/v1/notifications")
 @WebAdapter
 public class SendNotificationControllerAdapter {
 
@@ -28,7 +28,7 @@ public class SendNotificationControllerAdapter {
     @PostMapping("/hiring")
     public void sendHiringNotification (
             @RequestParam String email){
-        this.sendHiringNotificationInputPort.sendHiringNotification(email);
+        this.sendHiringNotificationInputPort.sendHiringNotification(email, "Bienvenido nuevo empleado");
     }
 
     @PostMapping("/all/{type}")

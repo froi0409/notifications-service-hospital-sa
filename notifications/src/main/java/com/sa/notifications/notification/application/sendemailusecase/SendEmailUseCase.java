@@ -20,8 +20,7 @@ public class SendEmailUseCase {
         message.setTo(to);
         message.setSubject(subject);
         message.setText(body);
-        message.setFrom("williamumana201931448@cunoc.edu.gt");  // Asegúrate de que el correo sea el mismo que el configurado en properties
-
+        message.setFrom("hoscunocsacunocsa@gmail.com");
         mailSender.send(message);
     }
     

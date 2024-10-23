@@ -33,7 +33,7 @@ public class SendHiringNotificationUseCase implements SendHiringNotificationInpu
     }
 
     @Override
-    public void sendHiringNotification(String email) {
+    public void sendHiringNotification(String email, String description) {
         
         // Get Notification hiring
         Notification notification = this.notificationDbOutputAdapter.findNotificationByType("Hiring");
@@ -50,7 +50,7 @@ public class SendHiringNotificationUseCase implements SendHiringNotificationInpu
         // Create a Notification log, type hiring
         NotificationLog notificationLog = NotificationLog.builder()
             .notification(notification)
-            .description(descriptionEmailHiring())
+            .description(description)
             .date(LocalDateTime.now())
             .build();
         
@@ -65,12 +65,8 @@ public class SendHiringNotificationUseCase implements SendHiringNotificationInpu
         employeeNotificationLog = this.employeeNotificationLogDbOutputAdapter.saveEmployeeNotificationLog(employeeNotificationLog);
         
         // Send email
-        this.sendEmailUseCase.sendEmail(email, "Welcome Employee", descriptionEmailHiring());
+        this.sendEmailUseCase.sendEmail(email, "Bienvenido Empleado", description);
     }
     
-    private String descriptionEmailHiring(){
-        return "¡Hola!,\n Te informamos que a partir de hoy formas parte de nuestro equipo"
-                + "\n ¡Te damos la bienvenida! \n Atentamente, HOSPITAL";
-    }
 
 }
