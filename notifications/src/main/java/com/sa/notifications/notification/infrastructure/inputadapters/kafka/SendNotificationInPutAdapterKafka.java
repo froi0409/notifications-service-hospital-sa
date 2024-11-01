@@ -5,7 +5,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sa.notifications.notification.application.sendallnotificationusecase.SendAllNotificationRequest;
 import com.sa.notifications.notification.application.sendhiringnotificationusecase.SendHiringNotificationRequest;
+import com.sa.notifications.notification.application.sendmailsubjectnotificationusecase.SendMailSubjectNotificationRequest;
 import com.sa.notifications.notification.infrastructure.inputports.restapi.SendHiringNotificationInputPort;
+import com.sa.notifications.notification.infrastructure.inputports.restapi.SendMailSubjectNotificationInputPort;
 import com.sa.notifications.notification.infrastructure.inputports.restapi.SendToAllNotificationInputPort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -19,12 +21,16 @@ public class SendNotificationInPutAdapterKafka {
     
     private SendHiringNotificationInputPort sendHiringNotificationInputPort;
     private SendToAllNotificationInputPort sendToAllNotificationInputPort;
+    private SendMailSubjectNotificationInputPort sendMailSubjectNotificationInputPort;
 
     @Autowired
-    public SendNotificationInPutAdapterKafka(SendHiringNotificationInputPort sendHiringNotificationInputPort, SendToAllNotificationInputPort sendToAllNotificationInputPort,
+    public SendNotificationInPutAdapterKafka(SendHiringNotificationInputPort sendHiringNotificationInputPort, 
+            SendMailSubjectNotificationInputPort sendMailSubjectNotificationInputPort,
+            SendToAllNotificationInputPort sendToAllNotificationInputPort,
             KafkaTemplate<String, String> kafkaTemplate) {
         this.sendHiringNotificationInputPort = sendHiringNotificationInputPort;
         this.sendToAllNotificationInputPort = sendToAllNotificationInputPort;
+        this.sendMailSubjectNotificationInputPort = sendMailSubjectNotificationInputPort;
     }
 
     @Retryable(
@@ -44,6 +50,7 @@ public class SendNotificationInPutAdapterKafka {
         
     }
     
+    
     @Retryable(
         value = { Exception.class },
         maxAttempts = 3,
@@ -59,5 +66,23 @@ public class SendNotificationInPutAdapterKafka {
             throw new RuntimeException("Error processing message: " + message, e);
         }
     }
+    
+    @Retryable(
+        value = { Exception.class },
+        maxAttempts = 3,
+        backoff = @Backoff(delay = 1000, maxDelay = 3000)
+    )
+    @KafkaListener(topics = "send-forgot-password", groupId = "notification-group")
+    public void handleMailSubjectNotificationEvent(String message) throws JsonProcessingException {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            SendMailSubjectNotificationRequest request = objectMapper.readValue(message, SendMailSubjectNotificationRequest.class);
+            this.sendMailSubjectNotificationInputPort.sendMailSubjectNotification(request);
+        } catch (Exception e) {
+            throw new RuntimeException("Error processing message: " + message, e);
+        }
+        
+    }
+    
 
 }
