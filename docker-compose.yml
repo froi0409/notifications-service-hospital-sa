@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  backend:
+    image: fernandoocana0409/hospital_users_backend:latest
+    ports: 
+      - "8093:8093"
+    networks:
+      - eureka-net
+
+networks:
+  eureka-net:
+    external: true
