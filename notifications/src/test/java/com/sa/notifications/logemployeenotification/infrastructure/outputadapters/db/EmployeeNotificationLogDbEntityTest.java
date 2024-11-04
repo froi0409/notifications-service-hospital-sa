@@ -1,94 +1,87 @@
 package com.sa.notifications.logemployeenotification.infrastructure.outputadapters.db;
 
-import com.sa.notifications.employeenotification.domain.EmployeeNotification;
-import com.sa.notifications.employeenotification.infrastructure.outputadapters.db.EmployeeNotificationDbEntity;
+import com.sa.notifications.logemployeenotification.domain.EmployeeNotificationLog;
+import com.sa.notifications.lognotification.domain.NotificationLog;
+import com.sa.notifications.lognotification.infrastructure.outputadapters.db.NotificationLogDbEntity;
 import com.sa.notifications.notification.domain.Notification;
 import com.sa.notifications.notification.infrastructure.outputadapters.db.NotificationDbEntity;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-class EmployeeNotificationDbEntityTest {
+class EmployeeNotificationLogDbEntityTest {
 
-    private EmployeeNotification employeeNotification;
-    private NotificationDbEntity notificationDbEntity;
-    private EmployeeNotificationDbEntity employeeNotificationDbEntity;
+    private EmployeeNotificationLogDbEntity entity;
+    private NotificationLogDbEntity notificationLogDbEntityMock;
 
     @BeforeEach
     void setUp() {
-        // Configuración de prueba para NotificationDbEntity
-        notificationDbEntity = new NotificationDbEntity();
-        notificationDbEntity.setId(UUID.randomUUID().toString());
-        notificationDbEntity.setType("Test Notification");
-
-        // Configuración de prueba para EmployeeNotification
-        employeeNotification = EmployeeNotification.builder()
-                .id(UUID.randomUUID())
-                .notification(Notification.builder()
-                        .id(UUID.fromString(notificationDbEntity.getId()))
-                        .type(notificationDbEntity.getType())
-                        .build())
-                .emailEmployee("test@example.com")
-                .build();
-
-        // Instancia para la clase EmployeeNotificationDbEntity
-        employeeNotificationDbEntity = new EmployeeNotificationDbEntity();
-        employeeNotificationDbEntity.setId(UUID.randomUUID().toString());
-        employeeNotificationDbEntity.setNotification(notificationDbEntity);
-        employeeNotificationDbEntity.setEmailEmployee("test@example.com");
+        notificationLogDbEntityMock = mock(NotificationLogDbEntity.class);
+        entity = new EmployeeNotificationLogDbEntity();
+        entity.setId(UUID.randomUUID().toString());
+        entity.setNotification(notificationLogDbEntityMock);
+        entity.setEmailEmployee("test@example.com");
     }
 
     @Test
     void testToDomainModel() {
-        // Conversión de EmployeeNotificationDbEntity a EmployeeNotification
-        EmployeeNotification domainModel = employeeNotificationDbEntity.toDomainModel();
-
-        // Verificaciones
+        // Given
+        when(notificationLogDbEntityMock.toDomainModel()).thenReturn(NotificationLog.builder()
+                .id(UUID.randomUUID())
+                .description("Test description")
+                .date(LocalDateTime.now())
+                .build());
+        
+        // When
+        EmployeeNotificationLog domainModel = entity.toDomainModel();
+        
+        // Then
         assertNotNull(domainModel);
-        assertEquals(employeeNotificationDbEntity.getId(), domainModel.getId().toString());
-        assertEquals(employeeNotificationDbEntity.getNotification().toDomainModel().getId(), domainModel.getNotification().getId());
-        assertEquals(employeeNotificationDbEntity.getEmailEmployee(), domainModel.getEmailEmployee());
+        assertEquals(UUID.fromString(entity.getId()), domainModel.getId());
+        assertEquals(entity.getEmailEmployee(), domainModel.getEmailEmployee());
+        assertNotNull(domainModel.getNotification());
     }
 
     @Test
-    void testFromDomainModel() {
-        // Conversión desde el modelo de dominio a EmployeeNotificationDbEntity
-        EmployeeNotificationDbEntity entity = EmployeeNotificationDbEntity.from(employeeNotification);
+void testFrom() {
+    // Given
+    Notification notification = Notification.builder()
+            .id(UUID.randomUUID())
+            .build();
 
-        // Verificaciones
-        assertNotNull(entity);
-        assertEquals(employeeNotification.getId().toString(), entity.getId());
-        assertEquals(employeeNotification.getNotification().getId().toString(), entity.getNotification().getId());
-        assertEquals(employeeNotification.getEmailEmployee(), entity.getEmailEmployee());
-    }
+    NotificationLog notificationLog = NotificationLog.builder()
+            .id(UUID.randomUUID())
+            .notification(notification)
+            .description("Test notification")
+            .date(LocalDateTime.now())
+            .build();
 
-    @Test
-    void testFromDomainModelWithNullId() {
-        // EmployeeNotification sin id
-        EmployeeNotification employeeWithoutId = EmployeeNotification.builder()
-                .notification(employeeNotification.getNotification())
-                .emailEmployee("test@example.com")
-                .build();
+    EmployeeNotificationLog domainModel = EmployeeNotificationLog.builder()
+            .id(UUID.randomUUID())
+            .notification(notificationLog)
+            .emailEmployee("test@example.com")
+            .build();
 
-        // Conversión desde el modelo de dominio a EmployeeNotificationDbEntity
-        EmployeeNotificationDbEntity entity = EmployeeNotificationDbEntity.from(employeeWithoutId);
+    // Crea una instancia real de NotificationLogDbEntity sin simular el método estático
+    NotificationLogDbEntity notificationLogDbEntity = new NotificationLogDbEntity();
+    notificationLogDbEntity.setId(notificationLog.getId().toString());
+    notificationLogDbEntity.setDescription(notificationLog.getDescription());
+    notificationLogDbEntity.setDate(notificationLog.getDate());
+    notificationLogDbEntity.setNotification(new NotificationDbEntity()); // Configura según lo que necesites
 
-        // Verificaciones
-        assertNotNull(entity.getId()); // Debe generar un UUID aleatorio
-        assertEquals(employeeWithoutId.getNotification().getId().toString(), entity.getNotification().getId());
-        assertEquals(employeeWithoutId.getEmailEmployee(), entity.getEmailEmployee());
-    }
+    // When
+    EmployeeNotificationLogDbEntity result = EmployeeNotificationLogDbEntity.from(domainModel);
 
-    @Test
-    void testToDomainModelWithNullNotification() {
-        // Si el notification es null, deberíamos recibir un NullPointerException
-        EmployeeNotificationDbEntity entity = new EmployeeNotificationDbEntity();
-        entity.setId(UUID.randomUUID().toString());
-        entity.setEmailEmployee("test@example.com");
+    // Then
+    assertNotNull(result);
+    assertEquals(domainModel.getId().toString(), result.getId());
+    assertEquals(domainModel.getEmailEmployee(), result.getEmailEmployee());
+    assertNotNull(result.getNotification());
+}
 
-        assertThrows(NullPointerException.class, entity::toDomainModel);
-    }
 }
