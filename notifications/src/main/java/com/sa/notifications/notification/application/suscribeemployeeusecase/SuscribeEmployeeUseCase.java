@@ -32,7 +32,6 @@ public class SuscribeEmployeeUseCase implements SuscribeEmployeeInputPort{
         // Validate that not exists the same notification
         validateNotification(type);
         
-        validateEmployee(emailEmployee);
         
         Notification notification = this.notificationDbOutputAdapter.findNotificationByType(type);
         if(notification == null){
@@ -61,11 +60,6 @@ public class SuscribeEmployeeUseCase implements SuscribeEmployeeInputPort{
         }
     }
     
-    private void validateEmployee(String idEmployee){
-        if (!this.notificationRestApiOutputAdapter.checkEmailEmployee(idEmployee)) {
-            throw new IllegalArgumentException("El email del empleado es incorrecto o no devuelve informacion");
-        }
-    }
 
     
     

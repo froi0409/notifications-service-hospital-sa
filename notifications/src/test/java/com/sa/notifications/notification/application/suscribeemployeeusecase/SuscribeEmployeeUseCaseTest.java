@@ -116,27 +116,27 @@ public class SuscribeEmployeeUseCaseTest {
         verify(employeeNotificationDbOutputAdapter, never()).suscribeEmployee(any(EmployeeNotification.class));
     }
 
-    @Test
-    void testSuscribeEmployee_InvalidEmployeeEmail() {
-        String type = "Promotion";
-        String emailEmployee = "invalid-email"; // Email inválido
-
-        // Simular que la notificación existe
-        Notification notification = Notification.builder().type(type).build();
-        when(notificationDbOutputAdapter.findNotificationByType(type)).thenReturn(notification);
-
-        // Simular que el email del empleado no es válido
-        when(notificationRestApiOutputAdapter.checkEmailEmployee(emailEmployee)).thenReturn(false);
-
-        // Verificar que se lanza una excepción
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            suscribeEmployeeUseCase.suscribeEmployee(type, emailEmployee);
-        });
-
-        assertEquals("El email del empleado es incorrecto o no devuelve informacion", exception.getMessage());
-
-        // Verificar que no se intenta crear una nueva suscripción
-        verify(employeeNotificationDbOutputAdapter, never()).suscribeEmployee(any(EmployeeNotification.class));
-    }
+//    @Test
+//    void testSuscribeEmployee_InvalidEmployeeEmail() {
+//        String type = "Promotion";
+//        String emailEmployee = "invalid-email"; // Email inválido
+//
+//        // Simular que la notificación existe
+//        Notification notification = Notification.builder().type(type).build();
+//        when(notificationDbOutputAdapter.findNotificationByType(type)).thenReturn(notification);
+//
+//        // Simular que el email del empleado no es válido
+//        when(notificationRestApiOutputAdapter.checkEmailEmployee(emailEmployee)).thenReturn(false);
+//
+//        // Verificar que se lanza una excepción
+//        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+//            suscribeEmployeeUseCase.suscribeEmployee(type, emailEmployee);
+//        });
+//
+//        assertEquals("El email del empleado es incorrecto o no devuelve informacion", exception.getMessage());
+//
+//        // Verificar que no se intenta crear una nueva suscripción
+//        verify(employeeNotificationDbOutputAdapter, never()).suscribeEmployee(any(EmployeeNotification.class));
+//    }
     
 }
